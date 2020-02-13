@@ -1,4 +1,4 @@
-//jshint esversion: 6
+//jshint esversion: 9
 import React, { Component } from 'react';
 import './App.css';
 import Person from './Person/Person';
@@ -13,21 +13,12 @@ class App extends Component {
     otherState: 'some other value',
     showPersons: false
   }
-  
-  // switchNameHandler = (newName) => {
-  //   this.setState({
-  //     persons: [
-  //       {name: newName, age: 10},
-  //       {name: 'sait', age: 14},
-  //       {name: 'esra', age: 45}
-  //     ]
-  //   })
-  // }
 
   deletePersonHandler = (personIndex) => {
-    // const persons = this.state.persons;//bu gercek state aldigi icin kotu cunku  in javascript, objects and arrays are reference types
+    // const persons = this.state.persons;//bu gercek state aldigi icin kotu cunku  in javascript, objects and arrays are reference types so we shouldn't mutate them directly because we only get a pointer when we reach out to person here and hence we would mutate the original object to which this pointer points. So the better approach is to create a new javascript object like this and then use this spread operator
     // const persons = this.state.persons.slice();//kopyasini olusturuyor
     //You should always update state in an immutable fashion, so without mutating the original state first. Create a copy, change that and then update the state with setState.
+    // const persons = this.state.persons.splice();The splice() method changes the contents of an array by removing or replacing existing elements and/or adding new elements in place.
     const persons = [...this.state.persons]//es6 spread operator is the best
     persons.splice(personIndex, 1);
     this.setState({persons: persons});
@@ -46,14 +37,7 @@ class App extends Component {
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
-    this.setState({
-      // persons: [
-      //   {name: 'ayla', age: 10},
-      //   {name: event.target.value, age: 14},
-      //   {name: 'esra', age: 45}
-      // ]
-      persons: persons
-    })
+    this.setState({persons: persons});
   }
 
   togglePersonHandler = () => {
@@ -84,21 +68,12 @@ class App extends Component {
                 name={person.name}
                 age={person.age}
                 key={person.id}
+                //I will again use this function syntax to conveniently pass that data. Now this function here, the overall function is the one which gets executed upon the onChange event. So here is where we get the event object just as we before got it when we didn't assign any function at all directly in the nameChangedHandler, now we get it here because this is now the first function which gets executed, this anonymous function we define here.bu kadar aciklamayi asagidaki event arg icin yaptik
                 changed={(event) => this.nameChangedHandler(event, person.id)}
               />
             )
+            // return React.createElement('div', {className: App}, .....)
           })}
-          {/* <Person 
-            name={this.state.persons[0].name} 
-            age={this.state.persons[0].age} />
-          <Person 
-            name={this.state.persons[1].name} 
-            age={this.state.persons[1].age}
-            click={this.switchNameHandler.bind(this, 'max!')}
-            changed={this.nameChangedHandler}>my hobby is game</Person>
-          <Person 
-            name={this.state.persons[2].name} 
-            age={this.state.persons[2].age} /> */}
         </div>
       )
     }
